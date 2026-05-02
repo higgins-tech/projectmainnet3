@@ -1,4 +1,4 @@
-    /* ─── CSS VARIABLES ─── */
+﻿    /* ─── CSS VARIABLES ─── */
     :root {
         --dark: #11002c;
         --white: #ffffff;
@@ -2442,4 +2442,20 @@
         border-color: var(--border-hv);
         color: var(--text);
         transform: translateY(-1px);
+    }
+
+    /*  protection layer  */
+    body {
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    input,
+    textarea,
+    select,
+    [contenteditable] {
+        -webkit-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
     }
